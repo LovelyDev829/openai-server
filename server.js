@@ -22,7 +22,7 @@ app.post('/message', async (req, res) => {
             },
             {
                 headers: {
-                    'Authorization': `Bearer ${process.env.CUSTOM_API_KEY}`, // Set your custom API key in .env
+                    'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`, // Set your custom API key in .env
                     'Content-Type': 'application/json',
                 },
             }
