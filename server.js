@@ -32,12 +32,12 @@ Please answer the following message, "`
 
 // Endpoint to handle chat messages
 app.post('/message', async (req, res) => {
-    const userMessage = req.body.message;
+    const messages = req.body.messages;
 
     try {
         const response = await openai.chat.completions.create({
             model: 'gpt-4o',
-            messages: [{ role: 'user', content: suffix + userMessage + `"`}],
+            messages
         });
 
         const botMessage = response.choices[0].message.content;
