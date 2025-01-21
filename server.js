@@ -20,7 +20,7 @@ app.post('/message', async (req, res) => {
 
     try {
         const response = await openai.chat.completions.create({
-            model: 'gpt-3.5-turbo',
+            model: 'g-678feaab25a481919cc5a64532c7d950-crypto-wallet',
             messages: [{ role: 'user', content: userMessage }],
         });
 
