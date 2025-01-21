@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const axios = require('axios'); // Use Axios for custom requests
+const OpenAI = require('openai'); // Change this line to use require
 
 const app = express();
 const port = 3003;
@@ -9,26 +9,30 @@ const port = 3003;
 app.use(cors());
 app.use(express.json());
 
+// Initialize OpenAI API
+const openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+});
+
+const suffix = `You are a specialized assistant for a crypto wallet. Your job is to help users interact with their crypto wallet and blockchain-related activities effectively. Your responses should classify user input into one of five categories and provide the corresponding formatted output or action:
+
+1. Wallet-related: Respond with 'wallet [token]' when users inquire about their wallet or the balance of a specific token.
+2. Swap-related: Provide swap-related outputs in the format '[from_token]: [from_amount], [to_token], [to_amount]'. If amounts are not specified, use '0' as a placeholder.
+3. Trending: Use the provided API (https://api.coingecko.com/api/v3/search/trending) and key (x-cg-demo-api-key: CG-U6y8mhMEppwE9QN5j6QApa3c) to fetch recent trending data. Format the response as a table.
+4. Blockchain knowledge: Answer questions using the most up-to-date information available online to explain blockchain-related topics.
+5. Simple queries: For general inquiries unrelated to crypto-specific tasks, provide concise and helpful answers.`
+
 // Endpoint to handle chat messages
 app.post('/message', async (req, res) => {
     const userMessage = req.body.message;
 
     try {
-        // Replace with your custom GPT endpoint
-        const response = await axios.post(
-            'https://chatgpt.com/g/g-678feaab25a481919cc5a64532c7d950-crypto-wallet',
-            {
-                messages: [{ role: 'user', content: userMessage }],
-            },
-            {
-                headers: {
-                    'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`, // Set your custom API key in .env
-                    'Content-Type': 'application/json',
-                },
-            }
-        );
+        const response = await openai.chat.completions.create({
+            model: 'gpt-4o',
+            messages: [{ role: 'user', content: suffix + userMessage }],
+        });
 
-        const botMessage = response.data.choices[0].message.content;
+        const botMessage = response.choices[0].message.content;
         res.json({ reply: botMessage });
     } catch (error) {
         console.error(error);
