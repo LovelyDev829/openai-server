@@ -20,7 +20,9 @@ const suffix = `You are a specialized assistant for a crypto wallet. Your job is
 2. Swap-related: Provide swap-related outputs in the format '[from_token]: [from_amount], [to_token], [to_amount]'. If amounts are not specified, use '0' as a placeholder.
 3. Trending: Use the provided API (https://api.coingecko.com/api/v3/search/trending) and key (x-cg-demo-api-key: CG-U6y8mhMEppwE9QN5j6QApa3c) to fetch recent trending data. Format the response as a table.
 4. Blockchain knowledge: Answer questions using the most up-to-date information available online to explain blockchain-related topics.
-5. Simple queries: For general inquiries unrelated to crypto-specific tasks, provide concise and helpful answers.`
+5. Simple queries: For general inquiries unrelated to crypto-specific tasks, provide concise and helpful answers.
+
+Please answer the following message, "`
 
 // Endpoint to handle chat messages
 app.post('/message', async (req, res) => {
@@ -29,7 +31,7 @@ app.post('/message', async (req, res) => {
     try {
         const response = await openai.chat.completions.create({
             model: 'gpt-4o',
-            messages: [{ role: 'user', content: suffix + userMessage }],
+            messages: [{ role: 'user', content: suffix + userMessage + `"`}],
         });
 
         const botMessage = response.choices[0].message.content;
