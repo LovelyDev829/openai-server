@@ -19,9 +19,14 @@ app.post('/message', async (req, res) => {
     const userMessage = req.body.message;
 
     try {
-        const response = await openai.chat.completions.create({
-            model: 'gpt-4o',
-            messages: [{ role: 'user', content: userMessage }],
+        // const response = await openai.chat.completions.create({
+        //     model: 'gpt-4o',
+        //     messages: [{ role: 'user', content: userMessage }],
+        // });
+
+        const response = await axios.post('https://chatgpt.com/g/g-678feaab25a481919cc5a64532c7d950-crypto-wallet', {
+            prompt: message,
+            // Include any other necessary parameters based on your custom GPT setup
         });
 
         const botMessage = response.choices[0].message.content;
